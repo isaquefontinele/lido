@@ -1,0 +1,41 @@
+# Gradle / Kotlin
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.kotlin/
+local.properties
+*.hprof
+
+# IDEs
+.idea/
+*.iml
+.fleet/
+.vscode/
+
+# Xcode / iOS
+xcuserdata/
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+iosApp/Pods/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Signing & secrets — never commit
+*.p12
+*.p8
+*.mobileprovision
+*.keystore
+*.jks
+GoogleService-Info.plist
+google-services.json
+.env
+.env.*
+!.env.example
+secrets.properties
+!secrets.properties.example
+
+# OS
+.DS_Store
+Thumbs.db
