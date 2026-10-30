@@ -28,3 +28,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+include(":shared")

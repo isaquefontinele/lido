@@ -1,0 +1,16 @@
+-- A saved article. Content, tags, highlights and FTS arrive with later milestones.
+CREATE TABLE Item (
+    id TEXT NOT NULL PRIMARY KEY,
+    url TEXT NOT NULL UNIQUE,
+    title TEXT,
+    savedAt INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM Item ORDER BY savedAt DESC;
+
+insert:
+INSERT OR IGNORE INTO Item(id, url, title, savedAt) VALUES (?, ?, ?, ?);
+
+deleteById:
+DELETE FROM Item WHERE id = ?;
