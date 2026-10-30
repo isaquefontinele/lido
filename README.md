@@ -49,9 +49,10 @@ Former Pocket users, heavy readers of newsletters and long-form articles, and an
 ## Architecture
 
 ```
+androidApp/          Android application (thin host for the shared UI)
 composeApp/          Compose Multiplatform UI (library, reader, settings)
 iosApp/              Xcode host + ShareExtension (Swift)
-shared/
+shared/              Non-UI code; the areas below start as packages
   capture/           URL intake, fetching, extraction pipeline
   reader/            Reader model, typography, progress
   library/           SQLDelight schema, tags, search (FTS)
@@ -73,12 +74,12 @@ Conflicts are resolved per field with last-writer-wins timestamps; highlights me
 
 ## Getting started
 
-Requirements: JDK 17+, Android Studio, Xcode 16+ (iOS, macOS only).
+Requirements: JDK 17+, Android Studio with the Android 37 SDK platform, Xcode 16+ (iOS, macOS only).
 
 ```bash
 git clone https://github.com/isaquefontinele/lido.git
 cd lido
-./gradlew :composeApp:installDebug   # Android
+./gradlew :androidApp:installDebug   # Android
 open iosApp/iosApp.xcodeproj         # iOS
 ./gradlew :shared:allTests
 ```

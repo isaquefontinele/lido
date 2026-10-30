@@ -35,7 +35,7 @@ Base package: `io.github.isaquefontinele.lido`.
 
 ## Build and test
 
-Requirements: JDK 17+, Android SDK (compileSdk 36), Xcode 16+ for iOS.
+Requirements: JDK 17+, Android SDK platform 37 (compileSdk 37, required by Compose 1.12), Xcode 16+ for iOS.
 
 ```bash
 ./gradlew :androidApp:assembleDebug        # build the Android app
@@ -47,6 +47,8 @@ open iosApp/iosApp.xcodeproj               # run on iOS (the build phase calls G
 ```
 
 After editing `iosApp/project.yml`, regenerate the project with `cd iosApp && xcodegen generate`.
+Only Apple Silicon simulators are configured (`iosSimulatorArm64`); command-line builds against a
+generic simulator destination need `ARCHS=arm64`. The static framework requires `-lsqlite3`.
 SQLDelight code is generated from `shared/src/commonMain/sqldelight/**.sq` on build.
 
 ## Conventions
