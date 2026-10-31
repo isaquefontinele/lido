@@ -1,0 +1,5 @@
+<resources>
+    <string name="share_label">Salvar no Lido</string>
+    <string name="share_saved">Salvo no Lido</string>
+    <string name="share_no_url">Nenhum link encontrado para salvar</string>
+</resources>
