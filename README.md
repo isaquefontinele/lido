@@ -1,5 +1,7 @@
 # Lido
 
+[![CI](https://github.com/isaquefontinele/lido/actions/workflows/ci.yml/badge.svg)](https://github.com/isaquefontinele/lido/actions/workflows/ci.yml)
+
 **Save it now, read it later — offline, private, and yours.** Lido is an open-source read-it-later app for Android and iOS. Save articles from any app, read them in a clean distraction-free view without internet, highlight and take notes, and keep everything in files you own. No account and no server.
 
 > 🇧🇷 *App de "ler depois" open source, alternativa ao Pocket: salva artigos, lê offline, destaques e notas, sem conta e sem servidor.*
