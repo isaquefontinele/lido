@@ -1,0 +1,36 @@
+-- Items waiting to be fetched and extracted. A row stays until extraction succeeds.
+-- nextAttemptAt is NULL once retrying has been given up (permanent error or too many attempts).
+CREATE TABLE FetchQueue (
+    itemId TEXT NOT NULL PRIMARY KEY,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    nextAttemptAt INTEGER,
+    lastError TEXT
+);
+
+CREATE INDEX FetchQueue_nextAttemptAt ON FetchQueue(nextAttemptAt);
+
+enqueue:
+INSERT OR REPLACE INTO FetchQueue(itemId, attempts, nextAttemptAt, lastError) VALUES (?, 0, ?, NULL);
+
+selectDue:
+SELECT * FROM FetchQueue
+WHERE nextAttemptAt IS NOT NULL AND nextAttemptAt <= :now
+ORDER BY nextAttemptAt
+LIMIT :limit;
+
+selectByItemId:
+SELECT * FROM FetchQueue WHERE itemId = ?;
+
+nextAttemptAt:
+SELECT min(nextAttemptAt) AS nextAttemptAt FROM FetchQueue;
+
+reschedule:
+UPDATE FetchQueue SET attempts = :attempts, nextAttemptAt = :nextAttemptAt, lastError = :lastError
+WHERE itemId = :itemId;
+
+giveUp:
+UPDATE FetchQueue SET attempts = :attempts, nextAttemptAt = NULL, lastError = :lastError
+WHERE itemId = :itemId;
+
+remove:
+DELETE FROM FetchQueue WHERE itemId = ?;

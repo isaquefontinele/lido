@@ -44,6 +44,7 @@ class LibraryRepository(
 
     fun delete(id: String) {
         database.transaction {
+            database.fetchQueueQueries.remove(id)
             database.articleContentQueries.deleteByItemId(id)
             database.itemQueries.deleteById(id)
         }

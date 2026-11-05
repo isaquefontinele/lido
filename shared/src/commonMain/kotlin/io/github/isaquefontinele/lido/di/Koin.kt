@@ -4,8 +4,11 @@ import io.github.isaquefontinele.lido.capture.ArticleExtractor
 import io.github.isaquefontinele.lido.capture.ArticlePipeline
 import io.github.isaquefontinele.lido.capture.CaptureService
 import io.github.isaquefontinele.lido.capture.ExtractionScheduler
-import io.github.isaquefontinele.lido.capture.ImmediateExtractionScheduler
+import io.github.isaquefontinele.lido.capture.FetchQueueProcessor
 import io.github.isaquefontinele.lido.capture.PageFetcher
+import io.github.isaquefontinele.lido.capture.QueueRunTrigger
+import io.github.isaquefontinele.lido.capture.QueuedExtractionScheduler
+import io.github.isaquefontinele.lido.capture.RetryPolicy
 import io.github.isaquefontinele.lido.db.LidoDatabase
 import io.github.isaquefontinele.lido.library.LibraryRepository
 import io.ktor.client.HttpClient
@@ -24,14 +27,14 @@ import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-/** Platform bindings, such as the SQLDelight driver. */
+/** Platform bindings: the SQLDelight driver and the [QueueRunTrigger]. */
 expect val platformModule: Module
 
 internal const val DATABASE_NAME = "lido.db"
 
 private const val USER_AGENT = "Mozilla/5.0 (compatible; Lido/0.1; +https://github.com/isaquefontinele/lido)"
 
-private fun now() = Clock.System.now().toEpochMilliseconds()
+internal fun now() = Clock.System.now().toEpochMilliseconds()
 
 val sharedModule = module {
     single { LidoDatabase(get()) }
@@ -61,10 +64,15 @@ val sharedModule = module {
     single { PageFetcher(get()) }
     single { ArticleExtractor() }
     single { ArticlePipeline(get(), get(), get(), now = ::now) }
-    single<ExtractionScheduler> { ImmediateExtractionScheduler(get(), get()) }
+    single { RetryPolicy() }
+    single { FetchQueueProcessor(get(), get(), get(), now = ::now) }
+    single<ExtractionScheduler> { QueuedExtractionScheduler(get(), get(), get()) }
 }
 
 fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication = startKoin {
     appDeclaration()
     modules(platformModule, sharedModule)
+}.also { app ->
+    // Pick up links that were saved offline or were waiting for a retry when the app was closed.
+    app.koin.get<QueueRunTrigger>().requestRun()
 }

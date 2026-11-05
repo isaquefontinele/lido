@@ -1,0 +1,11 @@
+CREATE TABLE FetchQueue (
+    itemId TEXT NOT NULL PRIMARY KEY,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    nextAttemptAt INTEGER,
+    lastError TEXT
+);
+
+CREATE INDEX FetchQueue_nextAttemptAt ON FetchQueue(nextAttemptAt);
+
+-- Items saved before the queue existed and never extracted are due right away.
+INSERT INTO FetchQueue(itemId, attempts, nextAttemptAt) SELECT id, 0, 0 FROM Item WHERE extractedAt IS NULL;
