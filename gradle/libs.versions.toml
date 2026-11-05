@@ -8,6 +8,8 @@ androidx-lifecycle = "2.11.0"
 kotlinx-coroutines = "1.11.0"
 koin = "4.2.2"
 sqldelight = "2.4.1"
+ktor = "3.6.1"
+klead = "1.0.0"
 
 android-compileSdk = "37"
 android-minSdk = "26"
@@ -36,6 +38,13 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", 
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+
+klead = { module = "com.prof18:klead", version.ref = "klead" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

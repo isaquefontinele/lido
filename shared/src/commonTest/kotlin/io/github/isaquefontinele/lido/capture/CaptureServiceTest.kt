@@ -27,7 +27,7 @@ class CaptureServiceTest {
     fun savesTheUrlWithTheSubjectAsTitle() = runTest(dispatcher) {
         val result = service.saveSharedText("Look https://example.com/a", subject = "An article")
 
-        assertEquals(CaptureResult.Saved("https://example.com/a"), result)
+        assertEquals(CaptureResult.Saved("id0", "https://example.com/a"), result)
         val item = repository.observeItems().first().single()
         assertEquals("https://example.com/a", item.url)
         assertEquals("An article", item.title)

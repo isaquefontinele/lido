@@ -1,6 +1,8 @@
 package io.github.isaquefontinele.lido.di
 
 import app.cash.sqldelight.db.SqlDriver
+import io.github.isaquefontinele.lido.capture.ArticlePipeline
+import io.github.isaquefontinele.lido.capture.ExtractionScheduler
 import io.github.isaquefontinele.lido.library.LibraryRepository
 import io.github.isaquefontinele.lido.library.createTestDriver
 import org.koin.core.context.stopKoin
@@ -17,10 +19,12 @@ class SharedModuleTest {
     }
 
     @Test
-    fun sharedModuleResolvesRepository() {
+    fun sharedModuleResolvesItsServices() {
         val testPlatform = module { single<SqlDriver> { createTestDriver() } }
         val koin = koinApplication { modules(testPlatform, sharedModule) }.koin
 
         assertNotNull(koin.get<LibraryRepository>())
+        assertNotNull(koin.get<ArticlePipeline>())
+        assertNotNull(koin.get<ExtractionScheduler>())
     }
 }

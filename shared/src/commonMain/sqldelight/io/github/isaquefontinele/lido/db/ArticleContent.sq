@@ -1,0 +1,14 @@
+-- Extracted, sanitized article HTML, kept apart from Item so library queries stay light.
+CREATE TABLE ArticleContent (
+    itemId TEXT NOT NULL PRIMARY KEY,
+    html TEXT NOT NULL
+);
+
+selectByItemId:
+SELECT html FROM ArticleContent WHERE itemId = ?;
+
+upsert:
+INSERT OR REPLACE INTO ArticleContent(itemId, html) VALUES (?, ?);
+
+deleteByItemId:
+DELETE FROM ArticleContent WHERE itemId = ?;

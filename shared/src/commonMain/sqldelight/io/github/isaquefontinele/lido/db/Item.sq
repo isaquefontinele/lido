@@ -1,16 +1,38 @@
--- A saved article. Content, tags, highlights and FTS arrive with later milestones.
+-- A saved article. Metadata columns are filled by the extraction pipeline;
+-- extractedAt stays NULL until the page has been fetched and extracted.
 CREATE TABLE Item (
     id TEXT NOT NULL PRIMARY KEY,
     url TEXT NOT NULL UNIQUE,
     title TEXT,
-    savedAt INTEGER NOT NULL
+    savedAt INTEGER NOT NULL,
+    author TEXT,
+    siteName TEXT,
+    leadImageUrl TEXT,
+    excerpt TEXT,
+    extractedAt INTEGER
 );
 
 selectAll:
 SELECT * FROM Item ORDER BY savedAt DESC;
 
+selectById:
+SELECT * FROM Item WHERE id = ?;
+
+selectIdByUrl:
+SELECT id FROM Item WHERE url = ?;
+
 insert:
 INSERT OR IGNORE INTO Item(id, url, title, savedAt) VALUES (?, ?, ?, ?);
+
+updateExtractedMetadata:
+UPDATE Item
+SET title = coalesce(:title, title),
+    author = :author,
+    siteName = :siteName,
+    leadImageUrl = :leadImageUrl,
+    excerpt = :excerpt,
+    extractedAt = :extractedAt
+WHERE id = :id;
 
 deleteById:
 DELETE FROM Item WHERE id = ?;

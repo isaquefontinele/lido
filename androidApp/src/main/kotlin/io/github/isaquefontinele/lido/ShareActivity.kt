@@ -7,12 +7,14 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import io.github.isaquefontinele.lido.capture.CaptureResult
 import io.github.isaquefontinele.lido.capture.CaptureService
+import io.github.isaquefontinele.lido.capture.ExtractionScheduler
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 /** Invisible share target: saves the shared link, confirms with a toast and closes. */
 class ShareActivity : ComponentActivity() {
     private val captureService: CaptureService by inject()
+    private val extractionScheduler: ExtractionScheduler by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class ShareActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             val result = captureService.saveSharedText(text, intent.getStringExtra(Intent.EXTRA_SUBJECT))
+            if (result is CaptureResult.Saved) extractionScheduler.schedule(result.itemId)
             val message = when (result) {
                 is CaptureResult.Saved -> R.string.share_saved
                 CaptureResult.NoUrl -> R.string.share_no_url

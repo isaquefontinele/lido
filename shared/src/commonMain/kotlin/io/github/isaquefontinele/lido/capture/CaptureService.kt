@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 sealed interface CaptureResult {
-    data class Saved(val url: String) : CaptureResult
+    data class Saved(val itemId: String, val url: String) : CaptureResult
     data object NoUrl : CaptureResult
 }
 
@@ -23,9 +23,9 @@ class CaptureService(
     suspend fun saveSharedText(text: String, subject: String? = null): CaptureResult {
         val url = extractUrl(text) ?: return CaptureResult.NoUrl
         val title = subject?.trim()?.takeIf { it.isNotEmpty() && extractUrl(it) == null }
-        withContext(dispatcher) {
+        val itemId = withContext(dispatcher) {
             repository.save(id = newId(), url = url, title = title, savedAt = now())
         }
-        return CaptureResult.Saved(url)
+        return CaptureResult.Saved(itemId, url)
     }
 }

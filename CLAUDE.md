@@ -59,4 +59,7 @@ SQLDelight code is generated from `shared/src/commonMain/sqldelight/**.sq` on bu
 - Add dependencies through the version catalog (`gradle/libs.versions.toml`), never inline.
 - Put logic in `commonMain`; use `expect`/`actual` or Koin platform modules only for platform APIs.
 - Shared tests go in `shared/src/commonTest`; platform test helpers in `androidHostTest`/`iosTest`.
+- Extraction tests use synthetic HTML fixtures in `shared/src/androidHostTest/resources/fixtures`,
+  never live sites. Network code is tested with Ktor's `MockEngine`.
+- Every schema change needs a SQLDelight migration in `shared/src/commonMain/sqldelight/migrations`.
 - Never commit secrets or signing files (see `.gitignore`).
